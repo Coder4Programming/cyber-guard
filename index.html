@@ -23,6 +23,11 @@
             --footer-gradient: linear-gradient(to top, rgba(2,6,23, 0.9), transparent);
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             --nav-height: 65px;
+            
+            /* Scrollbar Colors - Dark Mode */
+            --scroll-track: #0f172a;
+            --scroll-thumb: #334155;
+            --scroll-thumb-hover: #475569;
         }
 
         body.light-mode {
@@ -34,6 +39,11 @@
             --accent-color: #4f46e5;
             --footer-gradient: linear-gradient(to top, #e2e8f0, transparent);
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+            /* Scrollbar Colors - Light Mode */
+            --scroll-track: #e2e8f0;
+            --scroll-thumb: #cbd5e1;
+            --scroll-thumb-hover: #94a3b8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
@@ -41,7 +51,7 @@
 
         #canvas-map { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; pointer-events: none; }
 
-        /* --- ANIMATIONS --- */
+        /* ANIMATIONS */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
         @keyframes pulse-red { 
@@ -57,12 +67,6 @@
         }
 
         @keyframes tick { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-
-        /* POPUP ANIMATION */
-        @keyframes popupIn {
-            0% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
 
         /* TOAST ANIMATION */
         @keyframes slideDownBounce { 
@@ -80,6 +84,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Hero Text Gradient Flow */
         @keyframes gradientFlow { 
             0% { background-position: 0% 50%; } 
             50% { background-position: 100% 50%; } 
@@ -100,41 +105,121 @@
             border-right: 1px solid var(--glass-border);
             z-index: 1000; display: flex; flex-direction: column; backdrop-filter: blur(20px);
             transition: all 0.3s ease;
+            
+            /* SCROLLBAR CUSTOMIZATION */
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scroll-thumb) var(--scroll-track);
         }
+
+        /* Webkit Scrollbar Styling (Chrome, Safari, Edge) */
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: var(--scroll-track); }
+        .sidebar::-webkit-scrollbar-thumb { background-color: var(--scroll-thumb); border-radius: 10px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background-color: var(--scroll-thumb-hover); }
 
         .sidebar-brand {
-            padding: 40px 20px; text-align: center;
+            padding: 30px 20px; text-align: center;
             border-bottom: 1px solid var(--glass-border);
             display: flex; flex-direction: column; align-items: center; gap: 10px;
+            flex-shrink: 0; /* Prevent shrinking on small screens */
         }
         
-        /* ORIGINAL IMAGE LOGO */
-        .sidebar-brand img { 
-            width: 80px; height: 80px; border-radius: 50%; object-fit: cover; 
-            border: 2px solid var(--accent-color); padding: 2px; margin-bottom: 5px; 
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-            animation: pulse-glow 3s infinite ease-in-out;
+        .sidebar-brand h4 {
+            font-size: 1.5rem; font-weight: 700; color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            margin: 0;
         }
-        .sidebar-brand span { font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; color: var(--text-main); }
+        .sidebar-brand h4 i {
+            font-size: 3.5rem; margin-bottom: 5px;
+            animation: pulse-glow 3s infinite ease-in-out;
+            padding: 10px; border-radius: 50%; border: 2px solid var(--glass-border);
+        }
 
         .sidebar-controls {
-            padding: 20px; display: flex; justify-content: center; gap: 15px; align-items: center;
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; /* Center items */
+            align-items: center; 
+            gap: 25px; /* Consistent gap */
             border-bottom: 1px solid var(--glass-border);
             min-height: 80px;
+            flex-shrink: 0;
         }
 
-        .theme-switch { position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0; }
+        /* --- ADVANCED THEME TOGGLE START --- */
+        .theme-switch { position: relative; display: inline-block; width: 64px; height: 32px; }
         .theme-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(128, 128, 128, 0.2); transition: .4s; border-radius: 34px; border: 1px solid var(--glass-border); }
-        .slider:before { position: absolute; content: "\f186"; font-family: "Font Awesome 6 Free"; font-weight: 900; height: 20px; width: 20px; left: 3px; bottom: 2px; background-color: var(--bg-color); color: var(--accent-color); transition: .4s cubic-bezier(0.68, -0.55, 0.27, 1.55); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: var(--accent-color); }
-        input:checked + .slider:before { transform: translateX(24px) rotate(360deg); content: "\f185"; color: #f59e0b; background-color: white; }
+        
+        .slider { 
+            position: absolute; cursor: pointer; 
+            top: 0; left: 0; right: 0; bottom: 0; 
+            background-color: rgba(15, 23, 42, 0.6); /* Default Dark Track */
+            transition: .4s cubic-bezier(0.4, 0.0, 0.2, 1); 
+            border-radius: 34px; 
+            border: 2px solid var(--glass-border);
+            overflow: hidden;
+        }
+        
+        /* Sun/Moon Icons on Track Background */
+        .slider:after {
+            content: "\f185"; /* Sun Icon */
+            font-family: "Font Awesome 6 Free"; font-weight: 900;
+            position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
+            color: #f59e0b; font-size: 14px; transition: 0.4s; opacity: 0; /* Hidden in dark mode */
+        }
+        
+        .slider:before { 
+            position: absolute; content: "\f186"; /* Moon Icon inside knob by default */
+            font-family: "Font Awesome 6 Free"; font-weight: 900;
+            height: 24px; width: 24px; 
+            left: 2px; bottom: 2px; 
+            background-color: var(--text-main); 
+            color: var(--accent-color);
+            transition: .4s cubic-bezier(0.4, 0.0, 0.2, 1); 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        /* LIGHT MODE STATE */
+        input:checked + .slider { 
+            background-color: #bae6fd; /* Light Sky Blue Track */
+            border-color: #7dd3fc;
+        }
+        
+        input:checked + .slider:before { 
+            transform: translateX(32px); 
+            content: ""; /* Remove icon from knob in light mode, simpler look or keep it */
+            background-color: #f59e0b; /* Sun Yellow Knob */
+            box-shadow: 0 0 10px #f59e0b;
+        }
+        
+        /* Show Sun Icon on Track when Dark Mode (Knob is on left) - wait, logic reversed */
+        /* Let's fix visual logic: 
+           Unchecked (Dark): Knob Left (Moon). Background Dark.
+           Checked (Light): Knob Right (Sun). Background Light. 
+        */
+        
+        /* Dark Mode (Default Unchecked) */
+        .slider:before { content: "\f186"; color: var(--bg-color); background-color: var(--text-main); }
+        
+        /* Light Mode (Checked) */
+        input:checked + .slider:before { 
+            content: "\f185"; /* Sun Icon in Knob */
+            color: white; 
+            background-color: #f59e0b; 
+        }
+        /* --- ADVANCED THEME TOGGLE END --- */
 
         .sidebar-link {
             padding: 16px 30px; color: var(--text-sub); text-decoration: none;
             font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 15px;
             transition: 0.3s; border-left: 4px solid transparent;
             cursor: pointer;
+            flex-shrink: 0;
         }
         .sidebar-link:hover, .sidebar-link.active {
             color: var(--accent-color); background: rgba(99, 102, 241, 0.1);
@@ -143,8 +228,23 @@
         }
         .sidebar-link i { width: 25px; text-align: center; font-size: 1.1rem; }
 
-        .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(128, 128, 128, 0.1); color: var(--text-main); cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .btn-icon:hover { border-color: var(--accent-color); color: var(--accent-color); transform: scale(1.1); }
+        .btn-icon { 
+            width: 42px; height: 42px; 
+            border-radius: 12px; 
+            border: 1px solid var(--glass-border); 
+            background: rgba(128, 128, 128, 0.1); 
+            color: var(--text-main); 
+            cursor: pointer; transition: 0.3s; 
+            font-weight: 800; font-size: 0.9rem; 
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-icon:hover { 
+            border-color: var(--accent-color); 
+            color: var(--accent-color); 
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px); 
+        }
 
         .mobile-header {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 60px;
@@ -152,38 +252,50 @@
             z-index: 2000; justify-content: space-between; align-items: center; padding: 0 15px;
         }
         .mobile-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--text-main); }
-        .mobile-brand img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; }
-        .mobile-controls { display: flex; gap: 15px; align-items: center; height: 100%; }
+        .mobile-brand h4 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .mobile-brand i { font-size: 1.4rem; }
+        
+        .mobile-controls { display: flex; gap: 15px; align-items: center; }
 
         main { margin-left: var(--sidebar-width); padding: 40px 5% 60px 5%; width: calc(100% - var(--sidebar-width)); transition: all 0.3s ease; }
         
         .hero { text-align: center; margin-bottom: 50px; animation: fadeIn 1s ease-out; }
         .hero h1 { 
-            font-size: 3rem; font-weight: 900; 
-            background: linear-gradient(90deg, var(--text-main), var(--accent-color), var(--text-main));
+            font-size: 3.5rem; font-weight: 900; 
+            background: linear-gradient(90deg, var(--text-main), var(--accent-color), var(--text-main)); 
             background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             cursor: default; display: inline-block;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
-        .hero h1:hover { animation: gradientFlow 3s linear infinite; transform: scale(1.02); }
+        .hero h1:hover { 
+            animation: gradientFlow 3s linear infinite; 
+            transform: scale(1.05); 
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
 
-        .container { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); max-width: 1200px; margin: 0 auto; }
+        /* Reduced Max-Width for Compactness */
+        .container { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); max-width: 1000px; margin: 0 auto; }
         .section-title { grid-column: span 2; margin-top: 40px; font-size: 1.2rem; color: var(--accent-color); letter-spacing: 2px; text-transform: uppercase; border-left: 4px solid var(--accent-color); padding-left: 15px; }
 
-        .card, .full-width { 
+        .card { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; 
             padding: 25px; backdrop-filter: blur(15px); 
             transition: transform 0.4s, border-color 0.3s, box-shadow 0.4s; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column;
             opacity: 0; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
-        /* Staggered Animations */
-        .container > div:nth-child(1) { animation-delay: 0.1s; } .container > div:nth-child(2) { animation-delay: 0.2s; }
-        .container > div:nth-child(3) { animation-delay: 0.3s; } .container > div:nth-child(4) { animation-delay: 0.4s; }
-        .container > div:nth-child(5) { animation-delay: 0.5s; } .container > div:nth-child(6) { animation-delay: 0.6s; }
-        .container > div:nth-child(7) { animation-delay: 0.7s; } .container > div:nth-child(8) { animation-delay: 0.8s; }
-        .container > div:nth-child(9) { animation-delay: 0.9s; } .container > div:nth-child(10) { animation-delay: 1.0s; }
+        /* Adjusted Staggered Delay - 0.2s increments */
+        .container > div:nth-child(1) { animation-delay: 0.2s; } 
+        .container > div:nth-child(2) { animation-delay: 0.4s; }
+        .container > div:nth-child(3) { animation-delay: 0.6s; } 
+        .container > div:nth-child(4) { animation-delay: 0.8s; }
+        .container > div:nth-child(5) { animation-delay: 1.0s; } 
+        .container > div:nth-child(6) { animation-delay: 1.2s; }
+        .container > div:nth-child(7) { animation-delay: 1.4s; } 
+        .container > div:nth-child(8) { animation-delay: 1.6s; }
+        .container > div:nth-child(9) { animation-delay: 1.8s; } 
+        .container > div:nth-child(10) { animation-delay: 2.0s; }
 
         .card:hover { transform: translateY(-5px); border-color: var(--accent-color); box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15); }
         .full-width { grid-column: span 2; }
@@ -270,6 +382,7 @@
         .reader-content p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-sub); text-align: justify; }
         .reader-content ul { margin-bottom: 25px; padding-left: 20px; color: var(--text-sub); list-style: disc; }
         .reader-content li { margin-bottom: 12px; }
+        /* EXAMPLE BOX IN BLOG */
         .example-box {
             border: 2px solid #ef4444; 
             background: rgba(239, 68, 68, 0.08); 
@@ -289,9 +402,20 @@
         .close-legal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--danger); transition: 0.3s; }
         .close-legal:hover { transform: scale(1.2); }
 
-        #cyber-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: var(--bg-color); border: 2px solid var(--accent-color); padding: 30px; border-radius: 20px; backdrop-filter: blur(20px); z-index: 10500; display: none; text-align: center; opacity: 0; transition: 0.3s; box-shadow: 0 0 50px rgba(99, 102, 241, 0.4); animation: fadeIn 0.3s; }
-        #cyber-popup.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        /* FIXED QUIZ POPUP STYLES */
+        #cyber-popup { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); 
+            background: var(--bg-color); border: 2px solid var(--accent-color); 
+            padding: 30px; border-radius: 20px; backdrop-filter: blur(20px); 
+            z-index: 10500; display: none; text-align: center; opacity: 0; transition: 0.3s; 
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.4); animation: fadeIn 0.3s;
+            /* Added for better alignment and mobile compatibility */
+            width: 90%; max-width: 400px;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        #cyber-popup.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
+        /* TOAST - TOP WITH BOUNCE */
         #toast { 
             visibility: hidden; min-width: 280px; background: rgba(16, 185, 129, 0.95); color: #fff; 
             text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; 
@@ -301,7 +425,8 @@
             backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);
         }
         #toast.show { visibility: visible; animation: slideDownBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), fadeOutUp 0.5s 2.5s forwards; }
-        
+
+        /* FEEDBACK FORM STYLES */
         .fb-form-wrapper { width: 100%; text-align: left; margin-bottom: 15px; }
         .fb-label { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 5px; display: block; }
         
@@ -314,21 +439,23 @@
         @media (max-width: 768px) {
             .sidebar { 
                 top: auto; bottom: 0; left: 0; width: 100%; height: var(--nav-height); 
-                flex-direction: row; justify-content: space-around; padding: 0; 
+                /* Change to flex-start for scrolling */
+                flex-direction: row; justify-content: flex-start; padding: 0; 
                 border-right: none; border-top: 1px solid var(--glass-border); 
                 z-index: 5000; background: var(--bg-color); 
-                overflow-x: auto; 
+                overflow-x: auto; /* ALLOW SCROLL FOR MORE ITEMS */
+                overflow-y: hidden;
             }
             .sidebar-brand, .sidebar-controls { display: none !important; }
             .mobile-header { display: flex; }
             .sidebar-link { 
-                padding: 0 15px; flex: 0 0 auto; 
+                padding: 0 15px; flex: 0 0 auto; /* PREVENT SQUASHING */
                 justify-content: center; height: 100%; border-left: none; 
                 border-top: 3px solid transparent; flex-direction: column; gap: 5px; 
             }
             .sidebar-link i { font-size: 1.3rem; }
             .sidebar-link span { display: none; }
-            .sidebar-link.active { border-top-color: var(--accent-color); border-left-color: transparent; background: transparent; color: var(--accent-color); padding-left: 0; }
+            .sidebar-link.active { border-top-color: var(--accent-color); border-left-color: transparent; background: transparent; color: var(--accent-color); padding-left: 15px; }
             main { margin-left: 0; width: 100%; padding: 80px 20px 100px 20px; }
             .container { grid-template-columns: 1fr; gap: 20px; }
             .full-width, .section-title { grid-column: span 1; }
@@ -341,6 +468,7 @@
             @keyframes fadeOutUp { 0% { top: 80px; opacity: 1; } 100% { top: -100px; opacity: 0; } }
         }
 
+        /* CRITERIA STYLES - LIST LAYOUT */
         .criteria-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
         .criteria-item { font-size: 0.8rem; background: rgba(128,128,128,0.05); padding: 8px 12px; border-radius: 8px; color: var(--text-sub); transition: 0.3s; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--glass-border); }
         .criteria-item.valid { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
@@ -393,12 +521,12 @@
 
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <!-- ORIGINAL IMAGE LOGO -->
-            <img src="cyberguard.jpeg" alt="CyberGuard Logo" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); padding: 2px; margin-bottom: 5px; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); animation: pulse-glow 3s infinite ease-in-out;">
-            <span>CyberGuard</span>
+            <!-- UPDATED LOGO WITH ICON -->
+            <h4><i class="fas fa-user-shield" style="color:var(--accent-color);"></i> CyberGuard</h4>
         </div>
         <div class="sidebar-controls">
             <button class="btn-icon" onclick="toggleLanguage()" id="langBtn" title="Change Language">HI</button>
+            <!-- ADVANCED TOGGLE -->
             <label class="theme-switch" title="Toggle Dark/Light Mode">
                 <input type="checkbox" onchange="toggleTheme()">
                 <span class="slider"></span>
@@ -549,12 +677,6 @@
             <div class="card full-width">
                 <!-- FORM WITH AJAX SUBMISSION (Demo + Real) -->
                 <form onsubmit="submitFeedback(event)" action="https://formsubmit.co/cyberguard.co.in@gmail.com" method="POST" target="_blank" style="max-width: 600px; margin: 0 auto; text-align: left;">
-                    <!-- Honeypot -->
-                    <input type="text" name="_honey" style="display:none">
-                    <!-- Disable Captcha -->
-                    <input type="hidden" name="_captcha" value="false">
-                    <!-- Success Page (Optional - redirect back to site) -->
-                    <input type="hidden" name="_next" value="">
                     
                     <div class="fb-form-wrapper">
                         <label class="fb-label" style="font-weight:600;">Name</label>
@@ -587,7 +709,7 @@
                 <h4 style="color:var(--accent-color); margin-bottom:15px;">Connect with Team</h4>
                 <div class="social-grid" style="margin-bottom: 20px;">
                     <a href="https://www.linkedin.com/in/arpit-patidar-746568352" class="social-link linkedin" title="Founder 1" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-link linkedin" title="Founder 2"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.linkedin.com/in/ankit-patel-433595396" class="social-link linkedin" title="Founder 2" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 
                 <h4 style="color:var(--text-main); margin-bottom:15px; font-size:1rem;">Official Channels</h4>
@@ -608,9 +730,8 @@
         <!-- MOBILE HEADER -->
         <nav class="mobile-header">
             <div class="mobile-brand">
-                <!-- RESTORED ICON LOGO - IMAGE HERE -->
-                <img src="cyberguard.jpeg" alt="CyberGuard Logo" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color);">
-                <span>CyberGuard</span>
+                <!-- UPDATED MOBILE LOGO WITH ICON -->
+                <h4><i class="fas fa-user-shield" style="color:var(--accent-color);"></i> CyberGuard</h4>
             </div>
             <div class="mobile-controls">
                 <button class="btn-icon" onclick="toggleLanguage()" id="mobLangBtn" style="width:35px; height:35px;">HI</button>
@@ -712,13 +833,13 @@
                 sec_alerts: "खतरे के अलर्ट", alert_head: "⚠️ महत्वपूर्ण भारत अलर्ट", sec_blog: "साइबर ब्लॉग",
                 tab_upi: "UPI", tab_phishing: "फिशिंग", tab_job: "नौकरी", tab_cc: "हेल्पलाइन", tab_crypto: "क्रिप्टो",
                 sec_quiz: "साइबर IQ टेस्ट", sec_about: "हमारे बारे में", 
-                vis_btn: "हमारा विजन", mis_btn: "हमारा मिशन", val_btn: "हमारे मूल्य",
+                vis_btn: "हमारा विजन", mis_btn: "हमारा मिशन", val_btn: "हमारा मूल्य",
                 vis_txt: "उन्नत और सुलभ सुरक्षा उपकरणों के माध्यम से हर नागरिक के लिए एक सुरक्षित डिजिटल भारत का निर्माण करना।", 
                 mis_txt: "डिजिटल धोखाधड़ी और पहचान की चोरी से लड़ने के लिए 1.4 अरब भारतीयों को मुफ्त संसाधन प्रदान करना।", 
                 val_txt: "डेटा हैंडलिंग में ईमानदारी, संचालन में पारदर्शिता, और सभी उपयोगकर्ताओं के लिए गोपनीयता सबसे पहले।",
                 footer_desc: "रियल-टाइम डिजिटल सुरक्षा टूल्स के साथ भारत को सशक्त बनाना।",
                 footer_rights: "&copy; 2026 साइबरगार्ड। सर्वाधिकार सुरक्षित।", footer_made: "सुरक्षित भारत के लिए बनाया गया 🇮🇳",
-                risk_crit: "ऐसा कभी न करें!", risk_high: "सतर्क रहें", btn_read: "पढ़ें", t_length: "लंबाई:", t_upper: "बड़े अक्षर", t_numbers: "नंबर", t_symbols: "चिन्ह",
+                risk_crit: "ऐसा कभी न करें!", risk_high: "सतर्क रहें", btn_read: "पढ़ें", t_length: "लंबाई:", t_upper: "बड़े अक्षर", t_numbers: "नंबर", t_symbols: "चिन्ह",
                 alert_lbl: "चेतावनी", verified: "सत्यापित 🎯", vuln: "भेद्यता ⚠️", qFinTitle: "शील्ड सत्यापित! 🥷", qFinMsg: "आपकी साइबर जागरूकता बेहतरीन है।",
                 restartBtn: "दोबारा शुरू करें", copied: "कॉपी हुआ!", contact_footer: "आपका निजी साइबर कवच", flinks: "क्विक लिंक्स", flegal: "कानूनी",
                 ticker: "[LIVE] मुंबई नोड सक्रिय... [अलर्ट] नया QR स्कैम ट्रेंडिंग... [SECURE] 256-बिट एन्क्रिप्शन सक्रिय...",
@@ -770,13 +891,12 @@
                 },
                 icon: "fa-shield-alt", date: "Jan 10, 2026"
             },
-            // ... (Other blogs expanded similarly in the full code below) ...
             {
                 t: { en: "AI Voice Cloning Fraud: 2026", hi: "AI वॉइस क्लोनिंग फ्रॉड 2026" },
-                d: { en: "How to identify and stop AI generated voice scams immediately.", hi: "AI से बनी नकली आवाज़ों को तुरंत कैसे पहचानें और रोकें।" },
+                d: { en: "How to identify and stop AI generated voice scams immediately.", hi: "AI से बनी नकली आवाज़ों को तुरंत कैसे पहचानें और रोकें।" },
                 full: {
                     en: `<h1>The Rising Threat of AI Voice Cloning</h1><p>Artificial Intelligence has made incredible leaps, but it has a dark side. Scammers are now using AI tools to clone human voices with terrifying accuracy. They only need a 3-second audio clip from your social media (Instagram Reels, Facebook videos) to create a digital replica of your voice that can say anything they type.</p><h2>The "Emergency" Trap</h2><p>These scams usually target parents or grandparents. The phone rings, and on the other side, they hear their child crying or panicking. "Mom, I've been arrested," or "Dad, I had an accident." The voice sounds exactly like their child. The fraudster then takes the phone and demands an immediate money transfer to "settle the matter" or pay "hospital fees." Fear drives the victim to pay instantly.</p><h2>How to Protect Your Family</h2><ul><li><strong>The "Safe Word" Strategy:</strong> This is your best defense. Establish a secret code word with your family members that you never share online. If you get a distress call, ask for the code word. If the caller can't provide it, it's a scam.</li><li><strong>Verify the Story:</strong> If the caller says your relative is in the hospital, ask which one. Then hang up and call the hospital directly.</li><li><strong>Call the Person Directly:</strong> Hang up the suspicious call and dial your relative's known mobile number. Even if they don't answer, it breaks the panic cycle the scammer is trying to create.</li><li><strong>Limit Public Audio:</strong> Be mindful of how much of your voice you share on public social media profiles. Consider setting accounts to private.</li></ul><h2>What to Do?</h2><p>If you receive such a call, do not transfer money. Record the call if possible. Report the number to WhatsApp (if used) and the telecom authority.</p><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>A mother in Mumbai received a call where she heard her daughter screaming, "They have me!" A man then demanded ₹5 Lakhs ransom. The voice was an AI clone created from the daughter's travel vlog. The mother, though terrified, called her daughter's school landline and found she was safe in class. The scammer disconnected immediately. Verification saved her money.</p></div>`,
-                    hi: `<h1>AI वॉइस क्लोनिंग का बढ़ता खतरा</h1><p>आर्टिफिशियल इंटेलिजेंस ने अविश्वसनीय छलांग लगाई है, लेकिन इसका एक काला पहलू भी है। स्कैमर्स अब भयानक सटीकता के साथ मानवीय आवाजों को क्लोन करने के लिए AI टूल का उपयोग कर रहे हैं। उन्हें आपकी सोशल मीडिया (इंस्टाग्राम रील्स, फेसबुक वीडियो) से केवल 3-सेकंड की ऑडियो क्लिप की आवश्यकता होती है ताकि आपकी आवाज़ की डिजिटल नकल बनाई जा सके।</p><h2>"इमरजेंसी" का जाल</h2><p>ये घोटाले आमतौर पर माता-पिता या दादा-दादी को निशाना बनाते हैं। फोन बजता है, और दूसरी तरफ, वे अपने बच्चे को रोते या घबराते हुए सुनते हैं। "माँ, मुझे गिरफ्तार कर लिया गया है," या "पापा, मेरा एक्सीडेंट हो गया है।" आवाज़ बिल्कुल उनके बच्चे जैसी लगती है। फिर ठग फोन लेता है और "मामले को सुलझाने" या "अस्पताल की फीस" भरने के लिए तुरंत पैसे ट्रांसफर करने की मांग करता है। डर पीड़ित को तुरंत भुगतान करने के लिए मजबूर करता है।</p><h2>अपने परिवार की सुरक्षा कैसे करें</h2><ul><li><strong>"सुरक्षा शब्द" रणनीति:</strong> यह आपका सबसे अच्छा बचाव है। अपने परिवार के सदस्यों के साथ एक गुप्त कोड शब्द स्थापित करें जिसे आप कभी ऑनलाइन साझा न करें। यदि आपको संकट का कॉल आता है, तो कोड शब्द मांगें। यदि कॉलर इसे नहीं बता सकता, तो यह एक स्कैम है।</li><li><strong>कहानी की पुष्टि करें:</strong> यदि कॉलर कहता है कि आपका रिश्तेदार अस्पताल में है, तो पूछें कि कौन सा। फिर फोन काटें और सीधे अस्पताल को कॉल करें।</li><li><strong>सीधे कॉल करें:</strong> संदिग्ध कॉल को काटें और अपने रिश्तेदार के ज्ञात मोबाइल नंबर पर डायल करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>मुंबई की एक मां को एक फोन आया जिसमें उसने अपनी बेटी को चिल्लाते हुए सुना, "उन्होंने मुझे पकड़ लिया है!" फिर एक आदमी ने ₹5 लाख की फिरौती मांगी। आवाज बेटी के ट्रैवल व्लॉग से बनाई गई एक AI क्लोन थी। मां, हालांकि डरी हुई थी, ने अपनी बेटी के स्कूल के लैंडलाइन पर फोन किया और पाया कि वह क्लास में सुरक्षित है। सत्यापन ने उसे बचा लिया।</p></div>`
+                    hi: `<h1>AI वॉइस क्लोनिंग का बढ़ता खतरा</h1><p>आर्टिफिशियल इंटेलिजेंस ने अविश्वसनीय छलांग लगाई है, लेकिन इसका एक काला पहलू भी है। स्कैमर्स अब भयानक सटीकता के साथ मानवीय आवाजों को क्लोन करने के लिए AI टूल का उपयोग कर रहे हैं। उन्हें आपकी सोशल मीडिया (इंस्टाग्राम रील्स, फेसबुक वीडियो) से केवल 3-सेकंड की ऑडियो क्लिप की आवश्यकता होती है ताकि आपकी आवाज़ की डिजिटल नकल बनाई जा सके।</p><h2>"इमरजेंसी" का जाल</h2><p>ये घोटाले आमतौर पर माता-पिता या दादा-दादी को निशाना बनाते हैं। फोन बजता है, और दूसरी तरफ, वे अपने बच्चे को रोते या घबराते हुए सुनते हैं। "माँ, मुझे गिरफ्तार कर लिया गया है," या "पापा, मेरा एक्सीडेंट हो गया है।" आवाज़ बिल्कुल उनके बच्चे जैसी लगती है। फिर ठग फोन लेता है और "मामले को सुलझाने" या "अस्पताल की फीस" भरने के लिए तुरंत पैसे ट्रांसफर करने की मांग करता है। डर पीड़ित को तुरंत भुगतान करने के लिए मजबूर करता है।</p><h2>अपने परिवार की सुरक्षा कैसे करें</h2><ul><li><strong>"सुरक्षा शब्द" रणनीति:</strong> यह आपका सबसे अच्छा बचाव है। अपने परिवार के सदस्यों के साथ एक गुप्त कोड शब्द स्थापित करें जिसे आप कभी ऑनलाइन साझा न करें। यदि आपको संकट का कॉल आता है, तो कोड शब्द मांगें। यदि कॉलर इसे नहीं बता सकता, तो यह एक स्कैम है।</li><li><strong>कहानी की पुष्टि करें:</strong> यदि कॉलर कहता है कि आपका रिश्तेदार अस्पताल में है, तो पूछें कि कौन सा। फिर फोन काटें और सीधे अस्पताल को कॉल करें।</li><li><strong>सीधे कॉल करें:</strong> संदिग्ध कॉल को काटें और अपने रिश्तेदार के ज्ञात मोबाइल नंबर पर डायल करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>मुंबई की एक मां को एक फोन आया जिसमें उसने अपनी बेटी को चिल्लाते हुए सुना, "उन्होंने मुझे पकड़ लिया है!" फिर एक आदमी ने ₹5 लाख की फिरौती मांगी। आवाज बेटी के ट्रैवल व्लॉग से बनाई गई एक AI क्लोन थी। मां, हालांकि डरी हुई थी, ने अपनी बेटी के स्कूल के लैंडलाइन पर फोन किया और पाया कि वह क्लास में सुरक्षित है। सत्यापन ने उसे बचा लिया।</p></div>`
                 },
                 icon: "fa-microphone-alt", date: "Jan 12, 2026"
             },
@@ -785,27 +905,27 @@
                 d: { en: "Create unhackable passwords and secure your identities.", hi: "इन टिप्स के साथ हैक-प्रूफ पासवर्ड बनाएं और अपनी पहचान बचाएं।" },
                 full: {
                     en: `<h1>The First Line of Defense: Passwords</h1><p>In 2026, a weak password is like leaving your house key under the doormat. Hackers use sophisticated tools that can guess simple passwords in milliseconds. "Password123" or your date of birth are no longer sufficient protection for your digital life.</p><h2>How Hackers Crack Passwords</h2><p>Hackers use "Credential Stuffing" attacks. When one website is hacked (like a food delivery app), hackers take those email/password combinations and try them on banking sites, email, and social media. If you reuse passwords, one leak compromises your entire identity.</p><h2>The Rules of Password Hygiene</h2><ul><li><strong>Length is Strength:</strong> A password like "Correct-Horse-Battery-Staple" is harder to crack than "P@ssw0rd". Aim for phrases rather than words. Use at least 16 characters.</li><li><strong>The "No Reuse" Policy:</strong> Never use the same password twice. Your banking password should be unique, and your email password should be unique.</li><li><strong>Use a Password Manager:</strong> It is impossible to remember 50 unique, complex passwords. Use tools like Bitwarden, LastPass, or Google Password Manager. You only need to remember one "Master Password," and the tool handles the rest.</li><li><strong>Enable 2FA Everywhere:</strong> Even the strongest password can be stolen. Two-Factor Authentication ensures that even if a hacker has your password, they cannot enter without your phone.</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>John used the same password "J0hn@1990" for his LinkedIn, Gmail, and Bank account. When a small fitness app he used was hacked, his password was leaked on the dark web. Within 24 hours, hackers accessed his email, reset his banking password, and transferred funds. Had he used unique passwords, the damage would have been limited to just the fitness app.</p></div>`,
-                    hi: `<h1>बेहतर पासवर्ड बनाना सीखें</h1><p>ज्यादातर हैकर "ताला नहीं तोड़ते"; वे कमजोर या लीक हुए पासवर्ड का उपयोग करके बस "लॉग इन" करते हैं।</p><h2>सुरक्षित पहचान के लिए बेहतरीन तरीके</h2><p>जटिलता और विशिष्टता (uniqueness) पासवर्ड सुरक्षा के दो स्तंभ हैं।</p><h2>सुरक्षा के मुख्य चरण</h2><ul><li><strong>निजी जानकारी से बचें:</strong> पासवर्ड में नाम, जन्मदिन या फोन नंबर न डालें।</li><li><strong>लंबाई बढ़ाएं:</strong> कम से कम 12-16 अक्षरों का पासवर्ड रखें।</li><li><strong>मिश्रण का प्रयोग करें:</strong> बड़े अक्षर, छोटे अक्षर, नंबर और चिन्हों का मेल रखें।</li><li><strong>दोहराएं नहीं:</strong> हर अकाउंट के लिए अलग पासवर्ड रखें।</li><li><strong>पासवर्ड मैनेजर:</strong> पासवर्ड सुरक्षित रखने के लिए मैनेजर टूल का उपयोग करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>जॉन ने अपने लिंक्डइन, जीमेल और बैंक खाते के लिए एक ही पासवर्ड "J0hn@1990" का उपयोग किया। जब उसका उपयोग किया जाने वाला एक छोटा फिटनेस ऐप हैक हो गया, तो उसका पासवर्ड डार्क वेब पर लीक हो गया। 24 घंटों के भीतर, हैकर्स ने उसके ईमेल तक पहुंच बना ली, उसका बैंकिंग पासवर्ड रीसेट कर दिया और धनराशि स्थानांतरित कर दी। यदि उसने अलग पासवर्ड का उपयोग किया होता, तो नुकसान केवल फिटनेस ऐप तक ही सीमित रहता।</p></div>`
-                },
-                icon: "fa-key", date: "Jan 14, 2026"
+                    hi: `<h1>बेहतर पासवर्ड बनाना सीखें</h1><p>ज्यादातर हैकर "ताला नहीं तोड़ते"; वे कमजोर या लीक हुए पासवर्ड का उपयोग करके बस "लॉग इन" करते हैं।</p><h2>सुरक्षित पहचान के लिए बेहतरीन तरीके</h2><p>जटिलता और विशिष्टता (uniqueness) पासवर्ड सुरक्षा के दो स्तंभ हैं।</p><h2>सुरक्षा के मुख्य चरण</h2><ul><li><strong>निजी जानकारी से बचें:</strong> पासवर्ड में नाम, जन्मदिन या फोन नंबर न डालें।</li><li><strong>लंबाई बढ़ाएं:</strong> कम से कम 12-16 अक्षरों का पासवर्ड रखें।</li><li><strong>मिश्रण का प्रयोग करें:</strong> बड़े अक्षर, छोटे अक्षर, नंबर और चिन्हों का मेल रखें।</li><li><strong>दोहराएं नहीं:</strong> हर अकाउंट के लिए अलग पासवर्ड रखें।</li><li><strong>पासवर्ड मैनेजर:</strong> पासवर्ड सुरक्षित रखने के लिए मैनेजर टूल का उपयोग करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>जॉन ने अपने लिंक्डइन, जीमेल और बैंक खाते के लिए एक ही पासवर्ड "J0hn@1990" का उपयोग किया। जब उसका उपयोग किया जाने वाला एक छोटा फिटनेस ऐप हैक हो गया, तो उसका पासवर्ड डार्क वेब पर लीक हो गया। 24 घंटों के भीतर, हैकर्स ने उसके ईमेल तक पहुंच बना ली, उसका बैंकिंग पासवर्ड रीसेट कर दिया और धनराशि स्थानांतरित कर दी। यदि उसने अलग पासवर्ड का उपयोग किया होता, तो नुकसान केवल फिटनेस ऐप तक ही सीमित रहता।</p></div>`
+            },
+            icon: "fa-key", date: "Jan 14, 2026"
             },
             {
                 t: { en: "Social Media Privacy Lockdown", hi: "सोशल मीडिया प्राइवेसी लॉक" },
-                d: { en: "Essential settings to keep strangers out of your life.", hi: "अजनबियों को अपनी निजी जिंदगी से दूर रखने के लिए ज़रूरी सेटिंग्स।" },
+                d: { en: "Essential settings to keep strangers out of your life.", hi: "अजनबियों को अपनी निजी जिंदगी से दूर रखने के लिए ज़रूरी सेटिंग्स।" },
                 full: {
-                    en: `<h1>Your Life is Public Data</h1><p>Social media platforms are designed to share, but oversharing is a security vulnerability. Hackers use "OSINT" (Open Source Intelligence) to gather small details from your photos—your pet's name, your first school, your mother's name—to answer security questions and reset your banking passwords.</p><h2>The Stalker Threat</h2><p>Posting photos with location tags in real-time tells criminals exactly where you are, and more importantly, that your house is empty. Stalkers can use photos of your tickets or neighborhood to find your exact address.</p><h2>The Lockdown Checklist</h2><ul><li><strong>Go Private:</strong> Change your account visibility to 'Private' immediately. There is no reason for strangers to see your family photos.</li><li><strong>Audit Your Followers:</strong> Go through your followers list. If you don't know them personally, remove them. They could be bots scraping your data.</li><li><strong>Turn Off Location Services:</strong> Disable precise location sharing for social media apps in your phone settings. Never tag your location while you are still there; post it after you leave.</li><li><strong>Review Tagging:</strong> Change settings so that you must approve photos before they appear on your profile. This stops scammers from tagging you in spam posts.</li><li><strong>Two-Factor Authentication:</strong> Hackers love stealing high-follower accounts to sell scams. Enable 2FA to stop them.</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>Sarah posted her boarding pass on Instagram Story. A stalker scanned the barcode, got her phone number and flight details, and canceled her return flight. Never post sensitive documents online.</p></div>`,
-                    hi: `<h1>सोशल मीडिया प्राइवेसी गार्ड</h1><p>सोशल मीडिया पर साझा की गई जानकारी का उपयोग हैकर्स आपके पासवर्ड रीसेट करने या आपके दोस्तों को ठगने के लिए कर सकते हैं।</p><h2>2026 के लिए ज़रूरी सेटिंग्स</h2><p>आपको अपनी प्रोफाइल को अपने घर की तरह समझना चाहिए।</p><h2>लॉकडाउन चेकलिस्ट</h2><ul><li><strong>अकाउंट प्राइवेसी:</strong> प्रोफाइल को 'Private' मोड पर रखें। केवल जान-पहचान वालों को जोड़ें।</li><li><strong>सूचियां छुपाएं:</strong> अपनी फॉलोअर लिस्ट अजनबियों से छुपाएं।</li><li><strong>टू-फैक्टर (2FA):</strong> ऑथेंटिकेटर ऐप के साथ 2FA चालू करें।</li><li><strong>टैगिंग कंट्रोल:</strong> टैग की गई पोस्ट को मैन्युअल रूप से अप्रूव करें।</li><li><strong>लोकेशन डेटा:</strong> पोस्ट में रीयल-टाइम लोकेशन साझा न करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>सारा ने इंस्टाग्राम स्टोरी पर अपना बोर्डिंग पास पोस्ट किया। एक स्टॉकर ने बारकोड को स्कैन किया, उसका फोन नंबर और फ्लाइट डिटेल्स हासिल की और उसकी वापसी की फ्लाइट रद्द कर दी। संवेदनशील दस्तावेज कभी ऑनलाइन पोस्ट न करें।</p></div>`
-                },
-                icon: "fa-user-lock", date: "Jan 16, 2026"
+                    en: `<h1>Your Life is Public Data</h1><p>Social media platforms are designed to share, but oversharing is a security vulnerability. Hackers use "OSINT" (Open Source Intelligence) to gather small details from your photos—your pet's name, your first school, your mother's name—to answer security questions and reset your banking passwords.</p><h2>The Stalker Threat</h2><p>Posting photos with location tags in real-time tells criminals exactly where you are, and more importantly, that your house is empty. Stalkers can use photos of your tickets or neighborhood to find your exact address.</p><h2>The Lockdown Checklist</h2><ul><li><strong>Go Private:</strong> Change your account visibility to 'Private' immediately. There is no reason for strangers to see your family photos.</li><li><strong>Audit Your Followers:</strong> Go through your followers list. If you don't know them personally, remove them. They could be bots scraping your data.</li><li><strong>Turn Off Location Services:</strong> Disable precise location sharing for social media apps in your phone settings. Never tag your location while you are still there; post it after you leave.</li><li><strong>Review Tagging:</strong> Change settings so that you must approve photos before they appear on your profile. This stops scammers from tagging you in spam posts.</li><li><strong>Two-Factor Authentication:</strong> Hackers love stealing high-follower accounts to sell scams. Enable 2FA to stop them.</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>Sarah posted her boarding pass on Instagram Story. A stalker screenshotted it, scanned the barcode, and retrieved her full name, phone number, and passport details. He then logged into the airline's website and cancelled her return flight. Never post sensitive documents online.</p></div>`,
+                    hi: `<h1>सोशल मीडिया प्राइवेसी गार्ड</h1><p>सोशल मीडिया पर साझा की गई जानकारी का उपयोग हैकर्स आपके पासवर्ड रीसेट करने या आपके दोस्तों को ठगने के लिए कर सकते हैं।</p><h2>2026 के लिए ज़रूरी सेटिंग्स</h2><p>आपको अपनी प्रोफाइल को अपने घर की तरह समझना चाहिए।</p><h2>लॉकडाउन चेकलिस्ट</h2><ul><li><strong>अकाउंट प्राइवेसी:</strong> प्रोफाइल को 'Private' मोड पर रखें। केवल जान-पहचान वालों को जोड़ें।</li><li><strong>सूचियां छुपाएं:</strong> अपनी फॉलोअर लिस्ट अजनबियों से छुपाएं।</li><li><strong>टू-फैक्टर (2FA):</strong> ऑथेंटिकेटर ऐप के साथ 2FA चालू करें।</li><li><strong>टैगिंग कंट्रोल:</strong> टैग की गई पोस्ट को मैन्युअल रूप से अप्रूव करें।</li><li><strong>लोकेशन डेटा:</strong> पोस्ट में रीयल-टाइम लोकेशन साझा न करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>सारा ने इंस्टाग्राम स्टोरी पर अपना बोर्डिंग पास पोस्ट किया। एक स्टॉकर ने बारकोड को स्कैन किया, उसका फोन नंबर और फ्लाइट डिटेल्स हासिल की और उसकी वापसी की फ्लाइट रद्द कर दी। संवेदनशील दस्तावेज कभी ऑनलाइन पोस्ट न करें।</p></div>`
+            },
+            icon: "fa-user-lock", date: "Jan 16, 2026"
             },
             {
                 t: { en: "The Public Wi-Fi Trap Explained", hi: "पब्लिक वाई-फाई का जाल" },
-                d: { en: "Why free internet can cost you your bank balance.", hi: "फ्री इंटरनेट आपको भारी पड़ सकता है, जानें कैसे।" },
+                d: { en: "Why free internet can cost you your bank balance.", hi: "फ्री इंटरनेट आपको भारी पड़ सकता है, जानें कैसे।" },
                 full: {
                     en: `<h1>The Cost of Free Wi-Fi</h1><p>We all love free Wi-Fi at airports, cafes, and hotels. But connecting to these networks is like shouting your secrets in a crowded room. Most public networks are unencrypted, meaning anyone with a laptop and basic software nearby can see exactly what you are doing.</p><h2>The "Evil Twin" Attack</h2><p>Hackers set up fake Wi-Fi hotspots with names that look legitimate, like "Starbucks_Free_WiFi" or "Airport_Guest". When you connect to this fake network, the hacker intercepts all your traffic. This is called a Man-in-the-Middle (MITM) attack.</p><h2>How to Browse Safely</h2><ul><li><strong>Use Mobile Data:</strong> If possible, use your own 4G/5G hotspot. It is significantly more secure than any public Wi-Fi.</li><li><strong>VPN is Mandatory:</strong> If you must use public Wi-Fi, turn on a VPN (Virtual Private Network) immediately. It creates a secure, encrypted tunnel for your data, making it unreadable to hackers.</li><li><strong>Forget the Network:</strong> Once you are done, go to your Wi-Fi settings and "Forget" the network so your phone doesn't automatically reconnect next time.</li><li><strong>No Banking:</strong> Never access banking apps, enter credit card details, or log into sensitive email accounts on public Wi-Fi.</li><li><strong>Disable Sharing:</strong> Turn off file sharing and AirDrop/Nearby Share when in public spaces.</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>A businessman sat in a hotel lobby and connected to "Hotel_Guest_WiFi". It was a fake hotspot created by a teenager sitting across the room. The businessman logged into his corporate email. The hacker captured the session cookies, bypassed the password, and accessed confidential company contracts, leading to a massive data leak.</p></div>`,
                     hi: `<h1>पब्लिक वाई-फाई सर्वाइवल गाइड</h1><p>फ्री वाई-फाई सुविधाजनक है, लेकिन यह अक्सर असुरक्षित होता है। हैकर्स आपकी हर ऑनलाइन गतिविधि देख सकते हैं।</p><h2>"मैन-इन-द-मिडल" हमला</h2><p>हैकर्स 'फ्री_वाईफाई' जैसे नामों से फर्जी हॉटस्पॉट बनाकर आपका डेटा चुराते हैं।</p><h2>सुरक्षित रहने के उपाय</h2><ul><li><strong>VPN का प्रयोग करें:</strong> VPN आपके डेटा को एनक्रिप्ट करता है।</li><li><strong>HTTPS जांचें:</strong> हमेशा ब्राउज़र में पैडलॉक आइकन देखें।</li><li><strong>बैंकिंग से बचें:</strong> पब्लिक नेटवर्क पर बैंक अकाउंट न खोलें, मोबाइल डेटा का उपयोग करें।</li><li><strong>ऑटो-कनेक्ट बंद करें:</strong> 'ऑटो-जॉइन' सेटिंग को हमेशा बंद रखें।</li><li><strong>नेटवर्क भूल जाएं:</strong> इस्तेमाल के बाद 'Forget Network' करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>एक व्यवसायी लॉबी में "Hotel_Guest_WiFi" से जुड़ा। यह पास के एक हैकर द्वारा बनाया गया फर्जी हॉटस्पॉट था। उसने अपने कंपनी के ईमेल में लॉग इन किया, और हैकर ने उसका पासवर्ड चुरा लिया।</p></div>`
-                },
-                icon: "fa-wifi", date: "Jan 18, 2026"
+            },
+            icon: "fa-wifi", date: "Jan 18, 2026"
             }
         ];
 
@@ -817,7 +937,7 @@
             setTextSafe('langBtn', currentLang === 'en' ? 'HI' : 'EN');
             setTextSafe('mobLangBtn', currentLang === 'en' ? 'HI' : 'EN');
             
-            document.querySelectorAll('.sidebar-link span').forEach((s, i) => s.innerText = d[['nav_home','nav_tools','nav_alerts','nav_blog','nav_quiz','nav_about','nav_contact', 'nav_feedback'][i]]);
+            document.querySelectorAll('.sidebar-link span').forEach((s, i) => s.innerText = d[['nav_home','nav_tools','nav_alerts','nav_blog','nav_quiz','nav_about','nav_feedback', 'nav_contact'][i]]);
             ['tools','alerts','blog','quiz','about','contact', 'feedback'].forEach(id => setTextSafe(id+'-section', d[id === 'feedback' ? 'fb_title' : 'sec_'+id]));
             
             setTextSafe('t-strength', d.t_strength); setTextSafe('t-gen', d.t_gen);
