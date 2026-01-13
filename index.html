@@ -41,7 +41,7 @@
 
         #canvas-map { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; pointer-events: none; }
 
-        /* ANIMATIONS */
+        /* --- ANIMATIONS --- */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
         @keyframes pulse-red { 
@@ -57,6 +57,12 @@
         }
 
         @keyframes tick { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        /* POPUP ANIMATION */
+        @keyframes popupIn {
+            0% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
 
         /* TOAST ANIMATION */
         @keyframes slideDownBounce { 
@@ -74,7 +80,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Hero Text Gradient Flow */
         @keyframes gradientFlow { 
             0% { background-position: 0% 50%; } 
             50% { background-position: 100% 50%; } 
@@ -98,7 +103,7 @@
         }
 
         .sidebar-brand {
-            padding: 30px 20px; text-align: center;
+            padding: 40px 20px; text-align: center;
             border-bottom: 1px solid var(--glass-border);
             display: flex; flex-direction: column; align-items: center; gap: 10px;
         }
@@ -113,12 +118,12 @@
         .sidebar-brand span { font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; color: var(--text-main); }
 
         .sidebar-controls {
-            padding: 20px; display: flex; justify-content: center; gap: 20px; align-items: center;
+            padding: 20px; display: flex; justify-content: center; gap: 15px; align-items: center;
             border-bottom: 1px solid var(--glass-border);
             min-height: 80px;
         }
 
-        .theme-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .theme-switch { position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0; }
         .theme-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(128, 128, 128, 0.2); transition: .4s; border-radius: 34px; border: 1px solid var(--glass-border); }
         .slider:before { position: absolute; content: "\f186"; font-family: "Font Awesome 6 Free"; font-weight: 900; height: 20px; width: 20px; left: 3px; bottom: 2px; background-color: var(--bg-color); color: var(--accent-color); transition: .4s cubic-bezier(0.68, -0.55, 0.27, 1.55); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
@@ -138,7 +143,7 @@
         }
         .sidebar-link i { width: 25px; text-align: center; font-size: 1.1rem; }
 
-        .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(128, 128, 128, 0.1); color: var(--text-main); cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.8rem; }
+        .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(128, 128, 128, 0.1); color: var(--text-main); cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .btn-icon:hover { border-color: var(--accent-color); color: var(--accent-color); transform: scale(1.1); }
 
         .mobile-header {
@@ -147,47 +152,38 @@
             z-index: 2000; justify-content: space-between; align-items: center; padding: 0 15px;
         }
         .mobile-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--text-main); }
-        .mobile-brand img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; }
-        .mobile-controls { display: flex; gap: 15px; align-items: center; }
+        .mobile-brand img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; }
+        .mobile-controls { display: flex; gap: 15px; align-items: center; height: 100%; }
 
         main { margin-left: var(--sidebar-width); padding: 40px 5% 60px 5%; width: calc(100% - var(--sidebar-width)); transition: all 0.3s ease; }
         
         .hero { text-align: center; margin-bottom: 50px; animation: fadeIn 1s ease-out; }
         .hero h1 { 
-            font-size: 3.5rem; font-weight: 900; 
-            background: linear-gradient(90deg, var(--text-main), var(--accent-color), var(--text-main)); 
+            font-size: 3rem; font-weight: 900; 
+            background: linear-gradient(90deg, var(--text-main), var(--accent-color), var(--text-main));
             background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             cursor: default; display: inline-block;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
         }
-        .hero h1:hover { 
-            animation: gradientFlow 3s linear infinite; 
-            transform: scale(1.05); 
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
-        }
+        .hero h1:hover { animation: gradientFlow 3s linear infinite; transform: scale(1.02); }
 
         .container { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); max-width: 1200px; margin: 0 auto; }
         .section-title { grid-column: span 2; margin-top: 40px; font-size: 1.2rem; color: var(--accent-color); letter-spacing: 2px; text-transform: uppercase; border-left: 4px solid var(--accent-color); padding-left: 15px; }
 
-        .card { 
+        .card, .full-width { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; 
             padding: 25px; backdrop-filter: blur(15px); 
             transition: transform 0.4s, border-color 0.3s, box-shadow 0.4s; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column;
             opacity: 0; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
-        /* Staggered Delay for Entrance */
-        .container > div:nth-child(1) { animation-delay: 0.1s; } 
-        .container > div:nth-child(2) { animation-delay: 0.2s; }
-        .container > div:nth-child(3) { animation-delay: 0.3s; } 
-        .container > div:nth-child(4) { animation-delay: 0.4s; }
-        .container > div:nth-child(5) { animation-delay: 0.5s; } 
-        .container > div:nth-child(6) { animation-delay: 0.6s; }
-        .container > div:nth-child(7) { animation-delay: 0.7s; } 
-        .container > div:nth-child(8) { animation-delay: 0.8s; }
-        .container > div:nth-child(9) { animation-delay: 0.9s; } 
-        .container > div:nth-child(10) { animation-delay: 1.0s; }
+        /* Staggered Animations */
+        .container > div:nth-child(1) { animation-delay: 0.1s; } .container > div:nth-child(2) { animation-delay: 0.2s; }
+        .container > div:nth-child(3) { animation-delay: 0.3s; } .container > div:nth-child(4) { animation-delay: 0.4s; }
+        .container > div:nth-child(5) { animation-delay: 0.5s; } .container > div:nth-child(6) { animation-delay: 0.6s; }
+        .container > div:nth-child(7) { animation-delay: 0.7s; } .container > div:nth-child(8) { animation-delay: 0.8s; }
+        .container > div:nth-child(9) { animation-delay: 0.9s; } .container > div:nth-child(10) { animation-delay: 1.0s; }
 
         .card:hover { transform: translateY(-5px); border-color: var(--accent-color); box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15); }
         .full-width { grid-column: span 2; }
@@ -274,7 +270,6 @@
         .reader-content p { margin-bottom: 15px; font-size: 1.05rem; color: var(--text-sub); text-align: justify; }
         .reader-content ul { margin-bottom: 25px; padding-left: 20px; color: var(--text-sub); list-style: disc; }
         .reader-content li { margin-bottom: 12px; }
-        /* EXAMPLE BOX IN BLOG */
         .example-box {
             border: 2px solid #ef4444; 
             background: rgba(239, 68, 68, 0.08); 
@@ -297,7 +292,6 @@
         #cyber-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: var(--bg-color); border: 2px solid var(--accent-color); padding: 30px; border-radius: 20px; backdrop-filter: blur(20px); z-index: 10500; display: none; text-align: center; opacity: 0; transition: 0.3s; box-shadow: 0 0 50px rgba(99, 102, 241, 0.4); animation: fadeIn 0.3s; }
         #cyber-popup.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-        /* TOAST - TOP WITH BOUNCE */
         #toast { 
             visibility: hidden; min-width: 280px; background: rgba(16, 185, 129, 0.95); color: #fff; 
             text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; 
@@ -307,8 +301,7 @@
             backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);
         }
         #toast.show { visibility: visible; animation: slideDownBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), fadeOutUp 0.5s 2.5s forwards; }
-
-        /* FEEDBACK FORM STYLES */
+        
         .fb-form-wrapper { width: 100%; text-align: left; margin-bottom: 15px; }
         .fb-label { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 5px; display: block; }
         
@@ -324,18 +317,18 @@
                 flex-direction: row; justify-content: space-around; padding: 0; 
                 border-right: none; border-top: 1px solid var(--glass-border); 
                 z-index: 5000; background: var(--bg-color); 
-                overflow-x: auto; /* ALLOW SCROLL FOR MORE ITEMS */
+                overflow-x: auto; 
             }
             .sidebar-brand, .sidebar-controls { display: none !important; }
             .mobile-header { display: flex; }
             .sidebar-link { 
-                padding: 0 15px; flex: 0 0 auto; /* PREVENT SQUASHING */
+                padding: 0 15px; flex: 0 0 auto; 
                 justify-content: center; height: 100%; border-left: none; 
                 border-top: 3px solid transparent; flex-direction: column; gap: 5px; 
             }
             .sidebar-link i { font-size: 1.3rem; }
             .sidebar-link span { display: none; }
-            .sidebar-link.active { border-top-color: var(--accent-color); border-left-color: transparent; background: transparent; color: var(--accent-color); padding-left: 15px; }
+            .sidebar-link.active { border-top-color: var(--accent-color); border-left-color: transparent; background: transparent; color: var(--accent-color); padding-left: 0; }
             main { margin-left: 0; width: 100%; padding: 80px 20px 100px 20px; }
             .container { grid-template-columns: 1fr; gap: 20px; }
             .full-width, .section-title { grid-column: span 1; }
@@ -348,7 +341,6 @@
             @keyframes fadeOutUp { 0% { top: 80px; opacity: 1; } 100% { top: -100px; opacity: 0; } }
         }
 
-        /* CRITERIA STYLES - LIST LAYOUT */
         .criteria-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
         .criteria-item { font-size: 0.8rem; background: rgba(128,128,128,0.05); padding: 8px 12px; border-radius: 8px; color: var(--text-sub); transition: 0.3s; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--glass-border); }
         .criteria-item.valid { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
@@ -557,6 +549,12 @@
             <div class="card full-width">
                 <!-- FORM WITH AJAX SUBMISSION (Demo + Real) -->
                 <form onsubmit="submitFeedback(event)" action="https://formsubmit.co/cyberguard.co.in@gmail.com" method="POST" target="_blank" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                    <!-- Honeypot -->
+                    <input type="text" name="_honey" style="display:none">
+                    <!-- Disable Captcha -->
+                    <input type="hidden" name="_captcha" value="false">
+                    <!-- Success Page (Optional - redirect back to site) -->
+                    <input type="hidden" name="_next" value="">
                     
                     <div class="fb-form-wrapper">
                         <label class="fb-label" style="font-weight:600;">Name</label>
@@ -610,7 +608,7 @@
         <!-- MOBILE HEADER -->
         <nav class="mobile-header">
             <div class="mobile-brand">
-                <!-- ORIGINAL IMAGE LOGO HERE TOO -->
+                <!-- RESTORED ICON LOGO - IMAGE HERE -->
                 <img src="cyberguard.jpeg" alt="CyberGuard Logo" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color);">
                 <span>CyberGuard</span>
             </div>
@@ -714,7 +712,7 @@
                 sec_alerts: "खतरे के अलर्ट", alert_head: "⚠️ महत्वपूर्ण भारत अलर्ट", sec_blog: "साइबर ब्लॉग",
                 tab_upi: "UPI", tab_phishing: "फिशिंग", tab_job: "नौकरी", tab_cc: "हेल्पलाइन", tab_crypto: "क्रिप्टो",
                 sec_quiz: "साइबर IQ टेस्ट", sec_about: "हमारे बारे में", 
-                vis_btn: "हमारा विजन", mis_btn: "हमारा मिशन", val_btn: "हमारा मूल्य",
+                vis_btn: "हमारा विजन", mis_btn: "हमारा मिशन", val_btn: "हमारे मूल्य",
                 vis_txt: "उन्नत और सुलभ सुरक्षा उपकरणों के माध्यम से हर नागरिक के लिए एक सुरक्षित डिजिटल भारत का निर्माण करना।", 
                 mis_txt: "डिजिटल धोखाधड़ी और पहचान की चोरी से लड़ने के लिए 1.4 अरब भारतीयों को मुफ्त संसाधन प्रदान करना।", 
                 val_txt: "डेटा हैंडलिंग में ईमानदारी, संचालन में पारदर्शिता, और सभी उपयोगकर्ताओं के लिए गोपनीयता सबसे पहले।",
@@ -795,7 +793,7 @@
                 t: { en: "Social Media Privacy Lockdown", hi: "सोशल मीडिया प्राइवेसी लॉक" },
                 d: { en: "Essential settings to keep strangers out of your life.", hi: "अजनबियों को अपनी निजी जिंदगी से दूर रखने के लिए ज़रूरी सेटिंग्स।" },
                 full: {
-                    en: `<h1>Your Life is Public Data</h1><p>Social media platforms are designed to share, but oversharing is a security vulnerability. Hackers use "OSINT" (Open Source Intelligence) to gather small details from your photos—your pet's name, your first school, your mother's name—to answer security questions and reset your banking passwords.</p><h2>The Stalker Threat</h2><p>Posting photos with location tags in real-time tells criminals exactly where you are, and more importantly, that your house is empty. Stalkers can use photos of your tickets or neighborhood to find your exact address.</p><h2>The Lockdown Checklist</h2><ul><li><strong>Go Private:</strong> Change your account visibility to 'Private' immediately. There is no reason for strangers to see your family photos.</li><li><strong>Audit Your Followers:</strong> Go through your followers list. If you don't know them personally, remove them. They could be bots scraping your data.</li><li><strong>Turn Off Location Services:</strong> Disable precise location sharing for social media apps in your phone settings. Never tag your location while you are still there; post it after you leave.</li><li><strong>Review Tagging:</strong> Change settings so that you must approve photos before they appear on your profile. This stops scammers from tagging you in spam posts.</li><li><strong>Two-Factor Authentication:</strong> Hackers love stealing high-follower accounts to sell scams. Enable 2FA to stop them.</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>Sarah posted her boarding pass on Instagram Story. A stalker screenshotted it, scanned the barcode, and retrieved her full name, phone number, and passport details. He then logged into the airline's website and cancelled her return flight. Never post sensitive documents online.</p></div>`,
+                    en: `<h1>Your Life is Public Data</h1><p>Social media platforms are designed to share, but oversharing is a security vulnerability. Hackers use "OSINT" (Open Source Intelligence) to gather small details from your photos—your pet's name, your first school, your mother's name—to answer security questions and reset your banking passwords.</p><h2>The Stalker Threat</h2><p>Posting photos with location tags in real-time tells criminals exactly where you are, and more importantly, that your house is empty. Stalkers can use photos of your tickets or neighborhood to find your exact address.</p><h2>The Lockdown Checklist</h2><ul><li><strong>Go Private:</strong> Change your account visibility to 'Private' immediately. There is no reason for strangers to see your family photos.</li><li><strong>Audit Your Followers:</strong> Go through your followers list. If you don't know them personally, remove them. They could be bots scraping your data.</li><li><strong>Turn Off Location Services:</strong> Disable precise location sharing for social media apps in your phone settings. Never tag your location while you are still there; post it after you leave.</li><li><strong>Review Tagging:</strong> Change settings so that you must approve photos before they appear on your profile. This stops scammers from tagging you in spam posts.</li><li><strong>Two-Factor Authentication:</strong> Hackers love stealing high-follower accounts to sell scams. Enable 2FA to stop them.</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> Real-Life Incident</h3><p>Sarah posted her boarding pass on Instagram Story. A stalker scanned the barcode, got her phone number and flight details, and canceled her return flight. Never post sensitive documents online.</p></div>`,
                     hi: `<h1>सोशल मीडिया प्राइवेसी गार्ड</h1><p>सोशल मीडिया पर साझा की गई जानकारी का उपयोग हैकर्स आपके पासवर्ड रीसेट करने या आपके दोस्तों को ठगने के लिए कर सकते हैं।</p><h2>2026 के लिए ज़रूरी सेटिंग्स</h2><p>आपको अपनी प्रोफाइल को अपने घर की तरह समझना चाहिए।</p><h2>लॉकडाउन चेकलिस्ट</h2><ul><li><strong>अकाउंट प्राइवेसी:</strong> प्रोफाइल को 'Private' मोड पर रखें। केवल जान-पहचान वालों को जोड़ें।</li><li><strong>सूचियां छुपाएं:</strong> अपनी फॉलोअर लिस्ट अजनबियों से छुपाएं।</li><li><strong>टू-फैक्टर (2FA):</strong> ऑथेंटिकेटर ऐप के साथ 2FA चालू करें।</li><li><strong>टैगिंग कंट्रोल:</strong> टैग की गई पोस्ट को मैन्युअल रूप से अप्रूव करें।</li><li><strong>लोकेशन डेटा:</strong> पोस्ट में रीयल-टाइम लोकेशन साझा न करें।</li></ul><div class="example-box"><h3><i class="fas fa-exclamation-triangle"></i> सच्ची घटना</h3><p>सारा ने इंस्टाग्राम स्टोरी पर अपना बोर्डिंग पास पोस्ट किया। एक स्टॉकर ने बारकोड को स्कैन किया, उसका फोन नंबर और फ्लाइट डिटेल्स हासिल की और उसकी वापसी की फ्लाइट रद्द कर दी। संवेदनशील दस्तावेज कभी ऑनलाइन पोस्ट न करें।</p></div>`
                 },
                 icon: "fa-user-lock", date: "Jan 16, 2026"
@@ -819,7 +817,7 @@
             setTextSafe('langBtn', currentLang === 'en' ? 'HI' : 'EN');
             setTextSafe('mobLangBtn', currentLang === 'en' ? 'HI' : 'EN');
             
-            document.querySelectorAll('.sidebar-link span').forEach((s, i) => s.innerText = d[['nav_home','nav_tools','nav_alerts','nav_blog','nav_quiz','nav_about','nav_feedback', 'nav_contact'][i]]);
+            document.querySelectorAll('.sidebar-link span').forEach((s, i) => s.innerText = d[['nav_home','nav_tools','nav_alerts','nav_blog','nav_quiz','nav_about','nav_contact', 'nav_feedback'][i]]);
             ['tools','alerts','blog','quiz','about','contact', 'feedback'].forEach(id => setTextSafe(id+'-section', d[id === 'feedback' ? 'fb_title' : 'sec_'+id]));
             
             setTextSafe('t-strength', d.t_strength); setTextSafe('t-gen', d.t_gen);
